@@ -11,7 +11,7 @@ public class UserDetails
     public string? Cpf { get; init; }
     public string? Email { get; init; }
     public string? PhoneNumber { get; init; }
-    public string? Role { get; init; }
+    public string? Role { get; set; }
     public DateTime DateOfBirth { get; init; }
     public DateTime DateOfJoining { get; init; }
     public ERank ERank { get; init; }
