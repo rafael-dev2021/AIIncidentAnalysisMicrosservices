@@ -1,7 +1,9 @@
-﻿using AIIncidentAnalysisAuthServiceAPI.Context;
+﻿using AIIncidentAnalysisAuthServiceAPI.Algorithms.Interfaces;
+using AIIncidentAnalysisAuthServiceAPI.Context;
 using AIIncidentAnalysisAuthServiceAPI.Dto.Request;
 using AIIncidentAnalysisAuthServiceAPI.Dto.Response;
 using AIIncidentAnalysisAuthServiceAPI.Models;
+using AIIncidentAnalysisAuthServiceAPI.Models.Enums;
 using AIIncidentAnalysisAuthServiceAPI.Repositories.Strategies.RegisterUser.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,7 +14,8 @@ public class RegisterStrategy(
     UserManager<PoliceOfficer> userManager,
     AppDbContext appDbContext,
     IUserValidationManagerStrategy userValidationManagerStrategy,
-    IRegistrationLoggerStrategy registrationLoggerStrategy)
+    IRegistrationLoggerStrategy registrationLoggerStrategy,
+    IAccountNumberGenerator accountNumberGenerator)
     : IRegisterStrategy
 {
     public async Task<RegisterDtoResponse> CreateUserAsync(RegisterDtoRequest request)
@@ -35,7 +38,12 @@ public class RegisterStrategy(
         if (validationErrors.Count != 0)
             return new RegisterDtoResponse(false, string.Join(", ", validationErrors));
 
-        var appUser = CreateUser(request);
+      
+        var identificationNumber = await accountNumberGenerator.GenerateIdentificationNumberAsync();
+        var badgeNumber = await accountNumberGenerator.GenerateBadgeNumberAsync();
+        var appUser = CreateUser(request, identificationNumber, badgeNumber);
+
+        SetUserRoleAndAccessLevel(appUser, request.ERank);
 
         await using var transaction = await appDbContext.Database.BeginTransactionAsync();
         try
@@ -64,18 +72,20 @@ public class RegisterStrategy(
     private static bool IsPasswordConfirmed(RegisterDtoRequest request) =>
         request.Password == request.ConfirmPassword;
 
-    private static PoliceOfficer CreateUser(RegisterDtoRequest request)
+    private static PoliceOfficer CreateUser(RegisterDtoRequest request, string identificationNumber, string badgeNumber)
     {
         var appUser = new PoliceOfficer
         {
             Email = request.Email,
             UserName = request.Email,
-            PhoneNumber = request.PhoneNumber
+            PhoneNumber = request.PhoneNumber,
         };
+        appUser.SetIdentificationNumber(identificationNumber);
         appUser.SetName(request.Name);
         appUser.SetLastName(request.LastName);
+        appUser.SetBadgeNumber(badgeNumber);
         appUser.SetCpf(request.Cpf);
-        appUser.SetRole("User");
+        appUser.SetRole("User"); 
         appUser.SetDateOfBirth(request.DateOfBirth);
         appUser.SetDateOfJoining(request.DateOfJoining);
         appUser.SetERank(request.ERank);
@@ -83,12 +93,41 @@ public class RegisterStrategy(
         appUser.SetEOfficerStatus(request.EOfficerStatus);
         appUser.SetEAccessLevel(request.EAccessLevel);
 
+        SetUserRoleAndAccessLevel(appUser, request.ERank);
+
         return appUser;
+    }
+
+    private static void SetUserRoleAndAccessLevel(PoliceOfficer user, ERank rank)
+    {
+        switch (rank)
+        {
+            case ERank.Constable:
+                user.SetEAccessLevel(EAccessLevel.ReadOnly);
+                user.SetRole("ReadOnly");
+                break;
+            case ERank.Sergeant:
+            case ERank.Lieutenant:
+                user.SetEAccessLevel(EAccessLevel.ReadWrite);
+                user.SetRole("ReadWrite");
+                break;
+            case ERank.Captain:
+            case ERank.Inspector:
+            case ERank.Chief:
+                user.SetEAccessLevel(EAccessLevel.Admin);
+                user.SetRole("Admin");
+                break;
+            case ERank.Undefined:
+            default:
+                user.SetEAccessLevel(EAccessLevel.Undefined);
+                user.SetRole("User");
+                break;
+        }
     }
 
     private async Task AssignUserRoleAndSignInAsync(PoliceOfficer appUser)
     {
-        await userManager.AddToRoleAsync(appUser, "User");
+        await userManager.AddToRoleAsync(appUser, appUser.Role!);
         await signInManager.SignInAsync(appUser, isPersistent: false);
     }
 }
