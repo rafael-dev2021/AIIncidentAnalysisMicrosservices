@@ -23,15 +23,6 @@ public class RegisterStrategy(
         registrationLoggerStrategy.LogInformation("[REGISTRATION] Attempting to register user with Email= [{Email}]",
             request.Email!);
 
-        if (!IsPasswordConfirmed(request))
-        {
-            registrationLoggerStrategy.LogWarning(
-                "[REGISTRATION] Password and confirm password do not match for Email= [{Email}]",
-                request.Email!);
-
-            return new RegisterDtoResponse(false, "Password and confirm password do not match.");
-        }
-
         var validationErrors =
             await userValidationManagerStrategy.ValidateUserDetailsAsync(request.Cpf, request.Email!, request.PhoneNumber);
 
@@ -68,9 +59,6 @@ public class RegisterStrategy(
 
         return new RegisterDtoResponse(true, "Registration successful.");
     }
-
-    private static bool IsPasswordConfirmed(RegisterDtoRequest request) =>
-        request.Password == request.ConfirmPassword;
 
     private static PoliceOfficer CreateUser(RegisterDtoRequest request, string identificationNumber, string badgeNumber)
     {
