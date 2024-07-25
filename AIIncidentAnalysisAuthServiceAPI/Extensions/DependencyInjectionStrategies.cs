@@ -12,7 +12,6 @@ public static class DependencyInjectionStrategies
     public static void AddDependencyInjectionAuthStrategies(this IServiceCollection service)
     {
         service.AddScoped<IAuthStrategy, AuthStrategy>();
-        service.AddScoped<IAuthenticationLoggerStrategy, AuthenticationLoggerStrategy>();
         service.AddScoped<ILoginAttemptsManagerStrategy, LoginAttemptsManagerStrategy>();
     }
 
@@ -20,7 +19,6 @@ public static class DependencyInjectionStrategies
     {
         service.AddScoped<IRegisterStrategy, RegisterStrategy>();
         service.AddScoped<ILocalCacheManagerStrategy, LocalCacheManagerStrategy>();
-        service.AddScoped<IRegistrationLoggerStrategy, RegistrationLoggerStrategy>();
         service.AddScoped<IUserValidationManagerStrategy, UserValidationManagerStrategy>();
     }
 

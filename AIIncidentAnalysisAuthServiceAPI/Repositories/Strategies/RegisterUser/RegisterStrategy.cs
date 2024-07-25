@@ -14,13 +14,13 @@ public class RegisterStrategy(
     UserManager<PoliceOfficer> userManager,
     AppDbContext appDbContext,
     IUserValidationManagerStrategy userValidationManagerStrategy,
-    IRegistrationLoggerStrategy registrationLoggerStrategy,
+    ILoggerStrategies loggerStrategies,
     IAccountNumberGenerator accountNumberGenerator)
     : IRegisterStrategy
 {
     public async Task<RegisterDtoResponse> CreateUserAsync(RegisterDtoRequest request)
     {
-        registrationLoggerStrategy.LogInformation("[REGISTRATION] Attempting to register user with Email= [{Email}]",
+        loggerStrategies.LogInformation("[REGISTRATION] Attempting to register user with Email= [{Email}]",
             request.Email!);
 
         var validationErrors =
@@ -53,7 +53,7 @@ public class RegisterStrategy(
             return new RegisterDtoResponse(false, "Registration failed due to an internal error.");
         }
 
-        registrationLoggerStrategy.LogInformation(
+        loggerStrategies.LogInformation(
             "[REGISTRATION] User registered and signed in successfully with Email= [{Email}]",
             request.Email!);
 

@@ -10,7 +10,7 @@ namespace AIIncidentAnalysisAuthServiceAPI.Repositories.Strategies.AuthUser;
 public class AuthStrategy(
     SignInManager<PoliceOfficer> signInManager,
     ILoginAttemptsManagerStrategy loginAttemptsManagerStrategy,
-    IAuthenticationLoggerStrategy authenticationLoggerStrategy)
+    ILoggerStrategies loggerStrategies)
     : IAuthStrategy
 {
     public async Task<AuthDtoResponse> AuthenticatedAsync(LoginDtoRequest request)
@@ -18,12 +18,12 @@ public class AuthStrategy(
         var loginAttemptsKey = $"{LoginAttemptsManagerStrategy.LoginAttemptsKeyPrefix}{request.Email}";
         var loginAttempts = await loginAttemptsManagerStrategy.GetLoginAttemptsAsync(loginAttemptsKey);
 
-        authenticationLoggerStrategy.LogInformation("[AUTHENTICATION] Attempting to authenticate user [{Email}]",
+        loggerStrategies.LogInformation("[AUTHENTICATION] Attempting to authenticate user [{Email}]",
             request.Email!);
 
         if (loginAttempts >= 3)
         {
-            authenticationLoggerStrategy.LogWarning(
+            loggerStrategies.LogWarning(
                 "[AUTHENTICATION] User [{Email}] account is locked due to multiple failed attempts.",
                 request.Email!);
 
@@ -39,7 +39,7 @@ public class AuthStrategy(
         if (result.Succeeded)
         {
             await loginAttemptsManagerStrategy.ResetLoginAttemptsAsync(loginAttemptsKey);
-            authenticationLoggerStrategy.LogInformation("[AUTHENTICATION] User [{Email}] successfully authenticated.",
+            loggerStrategies.LogInformation("[AUTHENTICATION] User [{Email}] successfully authenticated.",
                 request.Email!);
 
             return new AuthDtoResponse(true, "Login successfully.");
