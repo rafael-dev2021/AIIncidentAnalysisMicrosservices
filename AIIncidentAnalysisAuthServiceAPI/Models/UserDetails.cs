@@ -4,18 +4,18 @@ namespace AIIncidentAnalysisAuthServiceAPI.Models;
 
 public class UserDetails
 {
-    public string? IdentificationNumber { get; init; }
-    public string? Name { get; init; }
-    public string? LastName { get; init; }
-    public string? BadgeNumber { get; init; }
-    public string? Cpf { get; init; }
-    public string? Email { get; init; }
-    public string? PhoneNumber { get; init; }
+    public string? IdentificationNumber { get; set; }
+    public string? Name { get; set; }
+    public string? LastName { get; set; }
+    public string? BadgeNumber { get; set; }
+    public string? Cpf { get; set; }
+    public string? Email { get; set; }
+    public string? PhoneNumber { get; set; }
     public string? Role { get; set; }
-    public DateTime DateOfBirth { get; init; }
-    public DateTime DateOfJoining { get; init; }
-    public ERank ERank { get; init; }
-    public EDepartment EDepartment { get; init; }
-    public EOfficerStatus EOfficerStatus { get; init; }
-    public EAccessLevel EAccessLevel { get; init; }
+    public DateTime DateOfBirth { get; set; }
+    public DateTime DateOfJoining { get; set; }
+    public ERank ERank { get; set; }
+    public EDepartment EDepartment { get; set; }
+    public EOfficerStatus EOfficerStatus { get; set; }
+    public EAccessLevel EAccessLevel { get; set; }
 }
