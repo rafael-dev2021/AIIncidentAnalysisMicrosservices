@@ -105,7 +105,6 @@ public class RegisterStrategy(
                 user.SetEAccessLevel(EAccessLevel.Admin);
                 user.SetRole("Admin");
                 break;
-            case ERank.Undefined:
             default:
                 user.SetEAccessLevel(EAccessLevel.Undefined);
                 user.SetRole("User");
