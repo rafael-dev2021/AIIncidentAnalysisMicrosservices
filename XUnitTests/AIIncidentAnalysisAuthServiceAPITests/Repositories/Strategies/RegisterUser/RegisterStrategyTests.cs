@@ -4,6 +4,7 @@ using AIIncidentAnalysisAuthServiceAPI.Dto.Request;
 using AIIncidentAnalysisAuthServiceAPI.Dto.Response;
 using AIIncidentAnalysisAuthServiceAPI.Models;
 using AIIncidentAnalysisAuthServiceAPI.Models.Enums;
+using AIIncidentAnalysisAuthServiceAPI.Repositories.Strategies;
 using AIIncidentAnalysisAuthServiceAPI.Repositories.Strategies.RegisterUser;
 using AIIncidentAnalysisAuthServiceAPI.Repositories.Strategies.RegisterUser.Interfaces;
 using FluentAssertions;
@@ -38,7 +39,7 @@ public class RegisterStrategyTests : IDisposable
         _appDbContext = new AppDbContext(options);
 
         _userValidationManagerStrategyMock = new Mock<IUserValidationManagerStrategy>();
-        Mock<IRegistrationLoggerStrategy> registrationLoggerStrategyMock = new();
+        Mock<ILoggerStrategies> registrationLoggerStrategyMock = new();
         _accountNumberGeneratorMock = new Mock<IAccountNumberGenerator>();
 
         _registerStrategy = new RegisterStrategy(

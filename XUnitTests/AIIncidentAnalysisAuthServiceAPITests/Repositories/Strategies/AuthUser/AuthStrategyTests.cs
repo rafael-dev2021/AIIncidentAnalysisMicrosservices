@@ -1,5 +1,6 @@
 ﻿using AIIncidentAnalysisAuthServiceAPI.Dto.Request;
 using AIIncidentAnalysisAuthServiceAPI.Models;
+using AIIncidentAnalysisAuthServiceAPI.Repositories.Strategies;
 using AIIncidentAnalysisAuthServiceAPI.Repositories.Strategies.AuthUser;
 using AIIncidentAnalysisAuthServiceAPI.Repositories.Strategies.AuthUser.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,7 @@ public class AuthStrategyTests
 {
     private readonly Mock<SignInManager<PoliceOfficer>> _signInManagerMock;
     private readonly Mock<ILoginAttemptsManagerStrategy> _loginAttemptsManagerStrategyMock;
-    private readonly Mock<IAuthenticationLoggerStrategy> _authenticationLoggerStrategyMock;
+    private readonly Mock<ILoggerStrategies> _authenticationLoggerStrategyMock;
     private readonly AuthStrategy _authStrategy;
 
     public AuthStrategyTests()
@@ -29,7 +30,7 @@ public class AuthStrategyTests
             null!, null!, null!, null!);
 
         _loginAttemptsManagerStrategyMock = new Mock<ILoginAttemptsManagerStrategy>();
-        _authenticationLoggerStrategyMock = new Mock<IAuthenticationLoggerStrategy>();
+        _authenticationLoggerStrategyMock = new Mock<ILoggerStrategies>();
 
         _authStrategy = new AuthStrategy(
             _signInManagerMock.Object,

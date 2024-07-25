@@ -188,6 +188,8 @@ public class SecurityFilterMiddlewareTests
 
                 // Assert
                 var logEvents = TestCorrelator.GetLogEventsFromCurrentContext();
+                Assert.NotEmpty(logEvents); 
+
                 Assert.Contains(logEvents,
                     logEvent => logEvent.MessageTemplate.Text.Contains(
                         "[ERROR_FILTER] Error processing security filter"));
