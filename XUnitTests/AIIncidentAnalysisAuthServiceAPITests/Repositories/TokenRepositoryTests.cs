@@ -186,7 +186,7 @@ public class TokenRepositoryTests
         initialTokens.Should().HaveCount(2);
 
         memoryCache.Set(cacheKey, initialTokens, TimeSpan.FromMinutes(5));
-        memoryCache.TryGetValue(cacheKey, out _).Should();
+        memoryCache.TryGetValue(cacheKey, out _).Should().BeTrue();
 
         // Act
         var policeOfficer = new PoliceOfficer { Id = userId };
@@ -222,7 +222,7 @@ public class TokenRepositoryTests
 
         // Cache the existing token for verification
         memoryCache.Set(cacheKey, new List<Token> { existingToken }, TimeSpan.FromMinutes(5));
-        memoryCache.TryGetValue(cacheKey, out _).Should();
+        memoryCache.TryGetValue(cacheKey, out _).Should().BeTrue();
 
         // Prepare new tokens and updated tokens
         var newToken = new Token();
@@ -286,7 +286,7 @@ public class TokenRepositoryTests
 
         // Cache the tokens
         memoryCache.Set(cacheKey, tokens, TimeSpan.FromMinutes(5));
-        memoryCache.TryGetValue(cacheKey, out _).Should();
+        memoryCache.TryGetValue(cacheKey, out _).Should().BeTrue();
 
         // Act
         await tokenRepository.DeleteAllTokensAsync(tokens);
