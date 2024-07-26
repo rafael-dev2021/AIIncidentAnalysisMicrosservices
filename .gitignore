@@ -397,3 +397,9 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Ignore the .env file
+AIIncidentAnalysisAuthServiceAPI/.env
+
+# Ignore the Migrations directory
+AIIncidentAnalysisAuthServiceAPI/Migrations/
