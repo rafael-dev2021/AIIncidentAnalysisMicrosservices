@@ -1,0 +1,30 @@
+@model AIIncidentAnalysisDocsFrontend.Dto.PdfPropertiesDto
+
+@{
+    ViewData["Title"] = "Propriedades do PDF";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-danger">@ViewBag.Message</div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Id</h5>
+            <p class="card-text">@Model.Id</p>
+            
+            <h5 class="card-title">Objetivo</h5>
+            <p class="card-text">@Model.Objective</p>
+
+            <h5 class="card-title">Resumo</h5>
+            <p class="card-text">@Model.Summary</p>
+
+            <h5 class="card-title">Habilidades</h5>
+            <p class="card-text">@Model.Skills</p>
+        </div>
+    </div>
+}

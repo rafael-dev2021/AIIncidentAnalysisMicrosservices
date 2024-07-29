@@ -1,0 +1,20 @@
+@{
+    ViewBag.Title = "Decodificar PDF";
+}
+
+<h2>Decodificar PDF</h2>
+
+<form method="post" asp-action="DecodePdf">
+    <div class="form-group">
+        <label for="id">ID do Documento JSON:</label>
+        <input type="text" name="id" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Decodificar PDF</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}

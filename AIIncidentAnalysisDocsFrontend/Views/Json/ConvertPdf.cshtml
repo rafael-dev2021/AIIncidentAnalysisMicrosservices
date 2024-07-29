@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Converter PDF para JSON";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+
+<form asp-controller="Json" asp-action="ConvertPdf" method="post">
+    <div class="form-group">
+        <label for="id">ID do Arquivo PDF:</label>
+        <input type="text" name="id" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Converter</button>
+</form>
